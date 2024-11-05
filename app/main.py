@@ -8,9 +8,10 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 # Incluir las rutas
+app.include_router(clientes.router, prefix="/clientes", tags=["clientes"])
 app.include_router(productos.router, prefix="/productos", tags=["productos"])
 app.include_router(pedidos.router, prefix="/pedidos", tags=["pedidos"])
-app.include_router(clientes.router, prefix="/clientes", tags=["clientes"])
+
 
 
 
