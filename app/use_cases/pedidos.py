@@ -1,4 +1,7 @@
 from app.models.pedido import Pedido
+from app.models.cliente import Cliente
+from app.models.producto import Producto
+from typing import List
 
 # Simulación de base de datos
 pedidos_db = []
@@ -24,5 +27,5 @@ def cancelar_pedido(pedido_id: int) -> bool:
         return True
     return False
 
-def listar_pedidos() -> list[Pedido]:
-    return pedidos_db 
+def listar_pedidos() -> List[Pedido]:
+    return pedidos_db
