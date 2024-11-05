@@ -1,0 +1,38 @@
+1. Estructura de la API con FastAPI
+Objetos y Casos de Uso
+Clientes
+
+2.Crear cliente: Registrar un nuevo cliente con datos como nombre, correo electrónico, dirección y teléfono.
+3.Editar cliente: Modificar información de un cliente existente.
+4.Eliminar cliente: Borrar un cliente de la base de datos.
+5.Ver cliente: Obtener detalles de un cliente específico.
+6.Listar clientes: Ver una lista de todos los clientes.
+Productos
+
+7.Agregar producto: Registrar un nuevo producto en el inventario.
+8.Actualizar producto: Modificar detalles de un producto, como precio o stock.
+9.Eliminar producto: Borrar un producto del inventario.
+10.Ver producto: Consultar detalles de un producto específico.
+11.Listar productos: Obtener una lista de productos (con filtros por categoría, precio, etc.).
+Pedidos
+
+12.Crear pedido: Generar un nuevo pedido con detalles de cliente y productos seleccionados.
+13.Ver detalles del pedido: Ver información completa de un pedido.
+14.Actualizar estado del pedido: Cambiar el estado de un pedido (e.g., "Pendiente", "Enviado", "Entregado").
+15.Cancelar pedido: Anular un pedido registrado.
+16.Listar pedidos: Consultar todos los pedidos (con filtros por cliente, fecha, o estado).
+Inventario
+
+17.Consultar inventario: Ver las existencias de productos.
+18.Actualizar existencias: Ajustar el stock manualmente.
+19.Notificaciones de stock bajo: Configurar alertas para productos con bajo inventario.
+20.Añadir o quitar inventario: Registrar cambios de stock, como entradas y salidas de productos.
+21.Ver historial de inventario: Consultar un registro de movimientos de inventario.
+
+22.Ejemplo de Personalización de Mensajes de Validación en FastAPI
+Para cada campo, podemos establecer validaciones y mensajes específicos.
+
+23.La base de datos debe ser de tipo SQL: SQLite
+24.Debes utilizar un ORM para la base de datos.
+25.Utiliza clean architecture para la estructura del proyecto.
+26.Evita usar operaciones asyncronas.
