@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.models.pedido import Pedido
+from app.models.cliente import Cliente
+from app.models.producto import Producto
 from app.use_cases.pedidos import (
     crear_pedido,
     ver_detalles_pedido,
@@ -7,6 +9,7 @@ from app.use_cases.pedidos import (
     cancelar_pedido,
     listar_pedidos,
 )
+from typing import List
 
 router = APIRouter()
 
@@ -30,8 +33,10 @@ async def modificar_estado_pedido(pedido_id: int, estado: str):
 
 @router.delete("/{pedido_id}")
 async def eliminar_pedido(pedido_id: int):
-    return cancelar_pedido(pedido_id)
+    if not cancelar_pedido(pedido_id):
+        raise HTTPException(status_code=404, detail="Pedido no encontrado")
+    return {"mensaje": "Pedido eliminado exitosamente"}
 
-@router.get("/", response_model=list[Pedido])
+@router.get("/", response_model=List[Pedido])
 async def obtener_pedidos():
     return listar_pedidos() 

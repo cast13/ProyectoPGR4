@@ -1,43 +1,41 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, EmailStr
+from app.models.cliente import Cliente as ClienteModel
+from uuid import UUID
 
 router = APIRouter()
-
-# Modelo de Cliente
-class Cliente(BaseModel):
-    nombre: str
-    correo: EmailStr
-    direccion: str
-    telefono: str
 
 # Simulación de base de datos
 clientes_db = []
 
-@router.post("/", response_model=Cliente)
-def crear_cliente(cliente: Cliente):
+@router.post("/", response_model=ClienteModel)
+def crear_cliente(cliente: ClienteModel):
+    # El ID se generará automáticamente en el modelo
     clientes_db.append(cliente)
     return cliente
 
-@router.put("/{cliente_id}", response_model=Cliente)
-def editar_cliente(cliente_id: int, cliente: Cliente):
-    if cliente_id >= len(clientes_db):
-        raise HTTPException(status_code=404, detail="Cliente no encontrado")
-    clientes_db[cliente_id] = cliente
-    return cliente
+@router.put("/{cliente_id}", response_model=ClienteModel)
+def editar_cliente(cliente_id: UUID, cliente: ClienteModel):
+    for index, c in enumerate(clientes_db):
+        if c.id == cliente_id:
+            clientes_db[index] = cliente
+            return cliente
+    raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
 @router.delete("/{cliente_id}")
-def eliminar_cliente(cliente_id: int):
-    if cliente_id >= len(clientes_db):
-        raise HTTPException(status_code=404, detail="Cliente no encontrado")
-    clientes_db.pop(cliente_id)
-    return {"detail": "Cliente eliminado"}
+def eliminar_cliente(cliente_id: UUID):
+    for index, c in enumerate(clientes_db):
+        if c.id == cliente_id:
+            clientes_db.pop(index)
+            return {"detail": "Cliente eliminado"}
+    raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
-@router.get("/{cliente_id}", response_model=Cliente)
-def ver_cliente(cliente_id: int):
-    if cliente_id >= len(clientes_db):
-        raise HTTPException(status_code=404, detail="Cliente no encontrado")
-    return clientes_db[cliente_id]
+@router.get("/{cliente_id}", response_model=ClienteModel)
+def ver_cliente(cliente_id: UUID):
+    for c in clientes_db:
+        if c.id == cliente_id:
+            return c
+    raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
-@router.get("/", response_model=list[Cliente])
+@router.get("/", response_model=list[ClienteModel])
 def listar_clientes():
-    return clientes_db 
+    return clientes_db

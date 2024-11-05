@@ -1,28 +1,33 @@
 from app.models.producto import Producto
+from uuid import UUID  # Importar UUID
 
 # Simulación de base de datos
 productos_db = []
 
 def agregar_producto(producto: Producto) -> Producto:
+    # No es necesario asignar un ID aquí, ya que se genera en el modelo
     productos_db.append(producto)
     return producto
 
-def actualizar_producto(producto_id: int, producto: Producto) -> Producto:
-    if producto_id < len(productos_db):
-        productos_db[producto_id] = producto
-        return producto
+def actualizar_producto(producto_id: UUID, producto: Producto) -> Producto:  # Cambiar a UUID
+    for index, p in enumerate(productos_db):
+        if p.id == producto_id:
+            productos_db[index] = producto
+            return producto
     return None
 
-def eliminar_producto(producto_id: int) -> bool:
-    if producto_id < len(productos_db):
-        productos_db.pop(producto_id)
-        return True
+def eliminar_producto(producto_id: UUID) -> bool:  # Cambiar a UUID
+    for index, p in enumerate(productos_db):
+        if p.id == producto_id:
+            productos_db.pop(index)
+            return True
     return False
 
-def ver_producto(producto_id: int) -> Producto:
-    if producto_id < len(productos_db):
-        return productos_db[producto_id]
+def ver_producto(producto_id: UUID) -> Producto:  # Cambiar a UUID
+    for p in productos_db:
+        if p.id == producto_id:
+            return p
     return None
 
 def listar_productos() -> list[Producto]:
-    return productos_db 
+    return productos_db
