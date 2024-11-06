@@ -1,14 +1,10 @@
-from pydantic import BaseModel
-from uuid import UUID, uuid4  # Importar UUID y uuid4
+from pydantic import BaseModel, Field
+from uuid import UUID, uuid4
 
 class Producto(BaseModel):
-    id: UUID  # Cambiar el tipo a UUID
-    nombre: str
-    descripcion: str
-    precio: float
-    stock: int
-
-    def __init__(self, **data):
-        if 'id' not in data or data['id'] is None:  # Generar un UUID si no se proporciona
-            data['id'] = uuid4()  # Generar un nuevo UUID
-        super().__init__(**data)
+    id: UUID = Field(default_factory=uuid4)
+    nombre: str = Field(..., min_length=1, max_length=100, description="El nombre del producto debe ser entre 1 y 100 caracteres.")
+    precio: float = Field(..., gt=0, description="El precio debe ser mayor a cero.")
+    cantidad: int = Field(..., gt=0, description="La cantidad debe ser mayor a cero.")
+    
+    # Agrega más validaciones según sea necesario
