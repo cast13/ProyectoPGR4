@@ -1,42 +1,35 @@
 from fastapi import APIRouter, HTTPException
 from app.models.pedido import Pedido
-from app.models.cliente import Cliente
-from app.models.producto import Producto
 from app.use_cases.pedidos import (
-    crear_pedido,
-    ver_detalles_pedido,
-    actualizar_estado_pedido,
-    cancelar_pedido,
     listar_pedidos,
+    obtener_pedido_por_id,
+    crear_pedido,
 )
 from typing import List
+from uuid import UUID
 
 router = APIRouter()
 
-@router.post("/", response_model=Pedido)
-def crear_nuevo_pedido(pedido: Pedido):
-    return crear_pedido(pedido)
-
-@router.get("/{pedido_id}", response_model=Pedido)
-def obtener_detalles_pedido(pedido_id: int):
-    pedido = ver_detalles_pedido(pedido_id)
-    if pedido is None:
-        raise HTTPException(status_code=404, detail="Pedido no encontrado")
-    return pedido
-
-@router.put("/{pedido_id}", response_model=Pedido)
-def modificar_estado_pedido(pedido_id: int, estado: str):
-    pedido = actualizar_estado_pedido(pedido_id, estado)
-    if pedido is None:
-        raise HTTPException(status_code=404, detail="Pedido no encontrado")
-    return pedido
-
-@router.delete("/{pedido_id}")
-def eliminar_pedido(pedido_id: int):
-    if not cancelar_pedido(pedido_id):
-        raise HTTPException(status_code=404, detail="Pedido no encontrado")
-    return {"mensaje": "Pedido eliminado exitosamente"}
-
 @router.get("/", response_model=List[Pedido])
 def obtener_pedidos():
-    return listar_pedidos() 
+    """Devuelve una lista de todos los pedidos."""
+    pedidos = listar_pedidos()
+    if not pedidos:
+        raise HTTPException(status_code=404, detail="No se encontraron pedidos")
+    return pedidos
+
+@router.get("/{pedido_id}", response_model=Pedido)
+def ver_pedido(pedido_id: int):
+    """Devuelve los detalles de un pedido específico."""
+    pedido = obtener_pedido_por_id(pedido_id)
+    if not pedido:
+        raise HTTPException(status_code=404, detail="Pedido no encontrado")
+    return pedido
+
+@router.post("/", response_model=Pedido)
+def crear_nuevo_pedido(pedido: Pedido):
+    """Crea un nuevo pedido."""
+    try:
+        return crear_pedido(pedido)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

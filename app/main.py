@@ -25,7 +25,6 @@ async def validation_exception_handler(request, exc):
                 {
                     "loc": error["loc"],
                     "msg": f"Error en el campo {error['loc'][-1]}: {traducir_mensaje_error(error['msg'])} ({traducir_tipo_error(error['type'])})",
-                    "type": error["type"]
                 } for error in exc.errors()
             ],
             "body": exc.body,
@@ -47,9 +46,8 @@ def traducir_mensaje_error(msg: str) -> str:
         "value is not a valid integer": "el valor no es un número entero válido",
         "string is too short": "la cadena es demasiado corta",
         "string is too long": "la cadena es demasiado larga",
-        # Agrega más traducciones según sea necesario
     }
-    return traducciones.get(msg, msg)  # Devuelve el mensaje traducido o el original si no hay traducción
+    return traducciones.get(msg, msg)
 
 def traducir_tipo_error(tipo: str) -> str:
     traducciones_tipo = {
@@ -61,9 +59,8 @@ def traducir_tipo_error(tipo: str) -> str:
         "value_error.str": "error de cadena",
         "value_error.float": "error de número decimal",
         "value_error.integer": "error de número entero",
-        # Agrega más traducciones según sea necesario
     }
-    return traducciones_tipo.get(tipo, tipo)  # Devuelve el tipo traducido o el original si no hay traducción
+    return traducciones_tipo.get(tipo, tipo)
 
 # Crear las tablas en la base de datos
 Base.metadata.create_all(bind=engine)

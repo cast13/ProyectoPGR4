@@ -1,5 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from app.models.cliente import Cliente as ClienteModel
+from app.use_cases.clientes import (
+    crear_cliente,
+    editar_cliente,
+    eliminar_cliente,
+    ver_cliente,
+    listar_clientes,
+)
+from app.use_cases.pedidos import contar_pedidos_por_cliente  # Importar la nueva función
 from uuid import UUID
 
 router = APIRouter()
@@ -39,3 +47,8 @@ def ver_cliente(cliente_id: UUID):
 @router.get("/", response_model=list[ClienteModel])
 def listar_clientes():
     return clientes_db
+
+@router.get("/{cliente_id}/cantidad_pedidos", response_model=int)
+def obtener_cantidad_pedidos(cliente_id: UUID):
+    cantidad = contar_pedidos_por_cliente(str(cliente_id))
+    return cantidad
