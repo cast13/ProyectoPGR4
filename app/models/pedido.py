@@ -10,11 +10,9 @@ class Cliente(BaseModel):
     pedidos: List['Pedido'] = []  # Relación con los pedidos
 
 class Pedido(BaseModel):
-    id: int  # ID del pedido (debe ser proporcionado al crear un pedido)
     cliente_id: UUID  # ID del cliente
-    productos: List[Producto]  # Lista de productos en el pedido
-    total: float  # Total del pedido
-    estado: str  # Estado del pedido (ej. "Pendiente", "Enviado", "Entregado")
+    productos: List[UUID]  # Lista de IDs de productos en el pedido
+    estado: str = "Pendiente"  # Estado por defecto
 
     @field_validator('productos')
     def verificar_productos(cls, v):
@@ -27,7 +25,6 @@ class Pedido(BaseModel):
         return {
             "cliente_id": self.cliente_id,
             "productos": productos_detalle,
-            "total": self.total,
             "estado": self.estado
         }
 
