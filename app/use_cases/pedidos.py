@@ -1,30 +1,24 @@
 from app.models.pedido import Pedido
-from app.models.cliente import Cliente
 from app.models.producto import Producto
 from typing import List, Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 
 # Simulación de base de datos
 pedidos_db = []
-clientes_db = []  # Simulación de base de datos para clientes
+productos_db = [
+    Producto(id=uuid4(), nombre="Producto 1", precio=10.0, cantidad=5),
+    Producto(id=uuid4(), nombre="Producto 2", precio=15.0, cantidad=10),
+    Producto(id=uuid4(), nombre="Producto 3", precio=20.0, cantidad=3),
+]
+
+def contar_pedidos_por_cliente(cliente_id: UUID) -> int:
+    """Cuenta el número de pedidos para un cliente específico."""
+    return sum(1 for pedido in pedidos_db if pedido.cliente_id == cliente_id)
 
 def crear_pedido(pedido: Pedido) -> Pedido:
-    # Verificar si el cliente existe
-    cliente = next((c for c in clientes_db if c.id == pedido.cliente_id), None)
-    if not cliente:
-        raise ValueError("Cliente no encontrado")
-
-    # Calcular el total del pedido
-    total = sum(producto.precio * producto.cantidad for producto in pedido.productos)
-    pedido.total = total  # Asignar el total al pedido
-
-    # Agregar el pedido a la base de datos
+    """Crea un nuevo pedido y lo agrega a la base de datos."""
     pedidos_db.append(pedido)
-    
-    # Agregar el pedido a la lista de pedidos del cliente
-    cliente.pedidos.append(pedido)  # Asegúrate de que el cliente tenga una lista de pedidos
-
-    return pedido
+    return pedido  # Asegúrate de devolver el pedido creado
 
 def listar_pedidos() -> List[Pedido]:
     """Devuelve una lista de todos los pedidos."""
@@ -36,10 +30,19 @@ def obtener_pedido_por_id(pedido_id: int) -> Optional[Pedido]:
         if pedido.id == pedido_id:
             return pedido
     return None
-def listar_pedidos_por_cliente(cliente_id: UUID) -> List[Pedido]:
-    """Devuelve una lista de pedidos para un cliente específico."""
-    return [pedido for pedido in pedidos_db if pedido.cliente_id == cliente_id]
 
-def contar_pedidos_por_cliente(cliente_id: UUID) -> int:
-    """Devuelve la cantidad de pedidos para un cliente específico."""
-    return len(listar_pedidos_por_cliente(cliente_id))
+def modificar_pedido(pedido_id: int, pedido: Pedido) -> Optional[Pedido]:
+    """Modifica un pedido existente."""
+    for index, p in enumerate(pedidos_db):
+        if p.id == pedido_id:
+            pedidos_db[index] = pedido
+            return pedido
+    return None
+
+def eliminar_pedido(pedido_id: int) -> bool:
+    """Elimina un pedido existente."""
+    for index, p in enumerate(pedidos_db):
+        if p.id == pedido_id:
+            pedidos_db.pop(index)
+            return True
+    return False

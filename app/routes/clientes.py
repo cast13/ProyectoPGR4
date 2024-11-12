@@ -7,7 +7,7 @@ from app.use_cases.clientes import (
     ver_cliente,
     listar_clientes,
 )
-from app.use_cases.pedidos import contar_pedidos_por_cliente  # Importar la nueva función
+from app.use_cases.pedidos import contar_pedidos_por_cliente  # Importar la función
 from uuid import UUID
 
 router = APIRouter()
@@ -50,5 +50,5 @@ def listar_clientes():
 
 @router.get("/{cliente_id}/cantidad_pedidos", response_model=int)
 def obtener_cantidad_pedidos(cliente_id: UUID):
-    cantidad = contar_pedidos_por_cliente(str(cliente_id))
+    cantidad = contar_pedidos_por_cliente(cliente_id)  # No es necesario convertir a str
     return cantidad
